@@ -32,7 +32,7 @@ export default function Classes() {
     const storedClasses = JSON.parse(localStorage.getItem("school_classes") || "[]");
     const storedSections = JSON.parse(localStorage.getItem("school_sections") || "[]");
     const storedSubjects = JSON.parse(localStorage.getItem("school_subjects") || "[]");
-    
+
     // Default mock data if empty
     if (storedClasses.length === 0) {
       const defaultClasses = [
@@ -113,11 +113,11 @@ export default function Classes() {
       message: "Are you sure you want to delete this class? This will also remove sections and subjects under it."
     });
     if (!confirmed) return;
-    
+
     const updatedClasses = classes.filter(c => c.id !== id);
     const updatedSections = sections.filter(s => s.classId !== id);
     const updatedSubjects = subjects.filter(sub => sub.classId !== id);
-    
+
     saveClasses(updatedClasses);
     saveSections(updatedSections);
     saveSubjects(updatedSubjects);
@@ -346,7 +346,7 @@ export default function Classes() {
             <div className="card-header">
               <h3>Class-wise Configuration Directory</h3>
             </div>
-            
+
             {classes.length === 0 ? (
               <div className="empty-state">
                 <p>No classes, sections, or subjects configured yet. Please configure them above.</p>
@@ -377,9 +377,9 @@ export default function Classes() {
                                 classSections.map(s => (
                                   <span key={s.id} className="badge badge-info mr-sm section-pill-edit" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
                                     {s.name}
-                                    <button 
-                                      className="section-mini-btn" 
-                                      title="Edit Section" 
+                                    <button
+                                      className="section-mini-btn"
+                                      title="Edit Section"
                                       onClick={() => {
                                         setEditSectionId(s.id);
                                         setEditSectionName(s.name);
@@ -388,9 +388,9 @@ export default function Classes() {
                                     >
                                       ✏️
                                     </button>
-                                    <button 
-                                      className="section-mini-btn delete" 
-                                      title="Delete Section" 
+                                    <button
+                                      className="section-mini-btn delete"
+                                      title="Delete Section"
                                       onClick={() => handleDeleteSection(s.id)}
                                     >
                                       🗑️
@@ -408,9 +408,9 @@ export default function Classes() {
                                 classSubjects.map(sub => (
                                   <span key={sub.id} className="badge badge-warning mr-sm section-pill-edit" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
                                     {sub.name}
-                                    <button 
-                                      className="section-mini-btn" 
-                                      title="Edit Subject" 
+                                    <button
+                                      className="section-mini-btn"
+                                      title="Edit Subject"
                                       onClick={() => {
                                         setEditSubjectId(sub.id);
                                         setEditSubjectName(sub.name);
@@ -419,9 +419,9 @@ export default function Classes() {
                                     >
                                       ✏️
                                     </button>
-                                    <button 
-                                      className="section-mini-btn delete" 
-                                      title="Delete Subject" 
+                                    <button
+                                      className="section-mini-btn delete"
+                                      title="Delete Subject"
                                       onClick={() => handleDeleteSubject(sub.id)}
                                     >
                                       🗑️
@@ -433,8 +433,8 @@ export default function Classes() {
                           </td>
                           <td>
                             <div className="table-action">
-                              <button 
-                                className="btn btn-outline btn-sm" 
+                              <button
+                                className="btn btn-outline btn-sm"
                                 onClick={() => {
                                   setEditClassId(c.id);
                                   setEditClassName(c.name);
@@ -442,8 +442,8 @@ export default function Classes() {
                               >
                                 <FiEdit /> Edit
                               </button>
-                              <button 
-                                className="btn btn-danger btn-sm" 
+                              <button
+                                className="btn btn-danger btn-sm"
                                 onClick={() => handleDeleteClass(c.id)}
                               >
                                 <FiTrash2 /> Delete

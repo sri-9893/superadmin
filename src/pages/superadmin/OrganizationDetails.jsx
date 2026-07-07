@@ -497,6 +497,10 @@ export default function OrganizationDetails() {
               <p>Inactive</p>
               <h2>{organizations.filter((o) => o.status === "inactive").length}</h2>
             </div>
+             <div className="card summary-card summary-card--red">
+              <p>Hold</p>
+              <h2>{organizations.filter((o) => o.status === "hold").length}</h2>
+            </div>
           </div>
         </div>
       </div>

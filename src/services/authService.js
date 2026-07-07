@@ -33,8 +33,6 @@ const STATIC_USERS = [
   },
 ];
 
-const LOCAL_USERS_STORAGE_KEY = "erp-local-users";
-
 function getPendingUser() {
   const raw = sessionStorage.getItem("pendingUser") || localStorage.getItem("pendingUser");
   if (!raw) return null;
@@ -83,6 +81,22 @@ function getAllUsers() {
   return [...STATIC_USERS, ...getStoredUsers()];
 }
 
+function normalizeUser(user) {
+  const roles = Array.isArray(user.roles) && user.roles.length > 0
+    ? user.roles
+    : user.role
+      ? [user.role]
+      : [];
+  const defaultRole = user.defaultRole || roles[0] || user.role;
+  const dashboards = Array.isArray(user.dashboards) && user.dashboards.length > 0
+    ? user.dashboards
+    : user.redirect
+      ? [{ label: "Dashboard", path: user.redirect, role: defaultRole }]
+      : [];
+
+  return { ...user, roles, defaultRole, dashboards };
+}
+
 export async function loginUser({ username, password }) {
   const matched = getAllUsers().find((item) => item.username === username && item.password === password);
 
@@ -93,23 +107,28 @@ export async function loginUser({ username, password }) {
     };
   }
 
-  const otp = matched.otp || "777777";
+  const normalized = normalizeUser(matched);
+  const otp = normalized.otp || "777777";
   const pendingUser = {
-    ...matched,
+    ...normalized,
+    parentId: normalized.parentId || null,
     otp,
-    organizationType: matched.organizationType || "Organization",
+    organizationType: normalized.organizationType || "Organization",
   };
 
   sessionStorage.setItem("pendingUser", JSON.stringify(pendingUser));
 
   return {
     success: true,
-    token: `static-${matched.username}-token`,
-    role: matched.role,
-    redirect: matched.redirect,
+    token: `static-${normalized.username}-token`,
+    role: normalized.defaultRole,
+    roles: normalized.roles,
+    dashboards: normalized.dashboards,
+    redirect: normalized.redirect || normalized.dashboards?.[0]?.path || "/school/dashboard",
     otp,
-    username: matched.username,
-    organizationType: matched.organizationType || "Organization",
+    username: normalized.username,
+    parentId: normalized.parentId || null,
+    organizationType: normalized.organizationType || "Organization",
     message: "Login successful. Please verify the OTP.",
   };
 }
@@ -135,9 +154,13 @@ export async function verifyOtp({ otp }) {
     success: true,
     message: "OTP verified successfully.",
     redirect: pendingUser.redirect,
-    role: pendingUser.role,
+    role: pendingUser.defaultRole || pendingUser.role,
+    roles: pendingUser.roles || [pendingUser.role],
+    dashboards: pendingUser.dashboards,
     username: pendingUser.username,
+    parentId: pendingUser.parentId || null,
     organizationType: pendingUser.organizationType,
+    defaultRole: pendingUser.defaultRole || pendingUser.role,
   };
 }
 

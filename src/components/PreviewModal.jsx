@@ -1,10 +1,15 @@
 import React from "react";
 import { FiPrinter, FiX, FiCheck } from "react-icons/fi";
 
-export default function PreviewModal({ title, data, onClose, onSubmit }) {
-  // Format key into Title Case
+export default function PreviewModal({
+  title,
+  data,
+  onClose,
+  onSubmit,
+  showSubmitButton = true,
+  submitLabel = "Submit",
+}) {
   const formatKey = (key) => {
-    // Separate camelCase with spaces and capitalize
     const result = key.replace(/([A-Z])/g, " $1");
     return result.charAt(0).toUpperCase() + result.slice(1);
   };
@@ -13,8 +18,7 @@ export default function PreviewModal({ title, data, onClose, onSubmit }) {
     window.print();
   };
 
-  // Filter out internal fields or file objects
-  const filteredKeys = Object.keys(data).filter(
+  const filteredKeys = Object.keys(data || {}).filter(
     (key) =>
       key !== "id" &&
       key !== "password" &&
@@ -25,7 +29,7 @@ export default function PreviewModal({ title, data, onClose, onSubmit }) {
   );
 
   return (
-    <div className="modal-overlay print-modal-overlay" style={{ zIndex: 12000 }}>
+    <div className="modal-overlay print-modal-overlay preview-modal-overlay">
       <div className="preview-modal-card print-area">
         <div className="modal-header no-print">
           <h3 className="preview-modal-title">{title}</h3>
@@ -34,9 +38,7 @@ export default function PreviewModal({ title, data, onClose, onSubmit }) {
           </button>
         </div>
 
-        <h2 className="print-only" style={{ marginBottom: "20px", textAlign: "center" }}>
-          {title}
-        </h2>
+        <h2 className="print-only">{title}</h2>
 
         <div className="preview-modal-grid">
           {filteredKeys.map((key) => (
@@ -54,9 +56,11 @@ export default function PreviewModal({ title, data, onClose, onSubmit }) {
           <button type="button" className="btn btn-outline" onClick={handlePrint}>
             <FiPrinter /> Print / Save PDF
           </button>
-          <button type="button" className="btn btn-primary" onClick={onSubmit}>
-            <FiCheck /> Submit
-          </button>
+          {showSubmitButton && (
+            <button type="button" className="btn btn-primary" onClick={onSubmit}>
+              <FiCheck /> {submitLabel}
+            </button>
+          )}
         </div>
       </div>
     </div>

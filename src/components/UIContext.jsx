@@ -1,12 +1,20 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import Toast from "./Toast";
 import ConfirmModal from "./ConfirmModal";
 
 const UIContext = createContext();
 
 export function UIProvider({ children }) {
+  const [theme, setTheme] = useState(
+    window.localStorage.getItem("theme") || "light"
+  );
   const [toasts, setToasts] = useState([]);
   const [confirmState, setConfirmState] = useState(null);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const showToast = (type, message) => {
     const id = Date.now() + Math.random().toString(36).substr(2, 9);
@@ -37,7 +45,7 @@ export function UIProvider({ children }) {
   };
 
   return (
-    <UIContext.Provider value={{ showToast, confirm }}>
+    <UIContext.Provider value={{ showToast, confirm, theme, setTheme }}>
       {children}
       <Toast toasts={toasts} onClose={removeToast} />
       {confirmState && (

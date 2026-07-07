@@ -78,36 +78,90 @@ function VerifyOtp() {
         SUPER_ADMIN: "/superadmin/dashboard",
         SCHOOL_ADMIN: "/school/dashboard",
         SCHOOL_TEACHER: "/school/teacher/dashboard",
+        SCHOOL_CLASS_TEACHER: "/school/class-teacher/dashboard",
         SCHOOL_PARENT: "/school/parent/dashboard",
         SCHOOL_CASHIER: "/school/cashier/dashboard",
+        SCHOOL_ACCOUNTANT: "/school/accountant/dashboard",
+        SCHOOL_DRIVER: "/school/driver/dashboard",
         SCHOOL_CLASS_INCHARGE: "/school/incharge/dashboard",
       };
 
-      const redirectPath = redirectMap[result.role] || result.redirect || "/login";
+      const roleList = Array.isArray(result.roles) && result.roles.length > 0
+        ? result.roles
+        : [result.role || result.defaultRole].filter(Boolean);
+      const effectiveRole = result.role || result.defaultRole || roleList[0] || "";
+      const dashboardList = Array.isArray(result.dashboards) && result.dashboards.length > 0
+        ? result.dashboards
+        : [{ label: "Dashboard", path: redirectMap[effectiveRole] || result.redirect || "/school/dashboard", role: effectiveRole }];
+      const redirectPath = (dashboardList && dashboardList[0]?.path) || redirectMap[effectiveRole] || result.redirect || "/school/dashboard";
       const currentUser = {
         username: result.username,
-        role: result.role,
+        role: effectiveRole,
+        roles: roleList,
+        dashboards: dashboardList,
+        defaultRole: effectiveRole,
         organizationType: result.organizationType,
+        parentId: result.parentId || null,
         redirect: redirectPath,
       };
 
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userRole", result.role);
+      localStorage.setItem("userRole", effectiveRole);
+      localStorage.setItem("userRoles", JSON.stringify(roleList));
+      localStorage.setItem("userDashboards", JSON.stringify(dashboardList));
       localStorage.setItem("username", result.username);
+      localStorage.setItem("parentId", result.parentId || "");
       localStorage.setItem("authToken", "dummy-token");
       localStorage.setItem("loginTime", Date.now().toString());
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
-      
+
       sessionStorage.setItem("isLoggedIn", "true");
-      sessionStorage.setItem("userRole", result.role);
+      sessionStorage.setItem("userRole", effectiveRole);
+      sessionStorage.setItem("userRoles", JSON.stringify(roleList));
+      sessionStorage.setItem("userDashboards", JSON.stringify(dashboardList));
       sessionStorage.setItem("username", result.username);
+      sessionStorage.setItem("parentId", result.parentId || "");
       sessionStorage.setItem("authToken", "dummy-token");
       sessionStorage.setItem("loginTime", Date.now().toString());
       sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
       sessionStorage.removeItem("pendingUser");
 
+      // Debug logging
+      console.log("OTP Verification Success:", {
+        effectiveRole,
+        roleList,
+        redirectPath,
+        dashboardList,
+        username: result.username,
+        organizationType: result.organizationType,
+        parentId: result.parentId,
+        allResultData: result,
+      });
+      console.log("LocalStorage set:", {
+        isLoggedIn: localStorage.getItem("isLoggedIn"),
+        userRole: localStorage.getItem("userRole"),
+        userRoles: localStorage.getItem("userRoles"),
+        authToken: localStorage.getItem("authToken"),
+        parentId: localStorage.getItem("parentId"),
+        currentUser: localStorage.getItem("currentUser"),
+      });
+
+      // Verify parentId is set for parent users
+      if (effectiveRole === "SCHOOL_PARENT" && !result.parentId) {
+        console.warn("WARNING: SCHOOL_PARENT user verified but parentId is missing. This may cause dashboard issues.");
+      }
+
       setSuccess(result.message || "OTP verified successfully.");
-      setTimeout(() => navigate(redirectPath, { replace: true }), 700);
+      if (roleList.length > 1) {
+        setTimeout(() => navigate("/school/role-selection", { replace: true }), 700);
+      } else {
+        setTimeout(() => {
+          if (effectiveRole === "SCHOOL_PARENT") {
+            console.log("Navigating SCHOOL_PARENT to:", redirectPath);
+          }
+          navigate(redirectPath, { replace: true });
+        }, 700);
+      }
     } catch (err) {
       setError(err.message || "Unable to verify OTP. Please try again.");
     } finally {

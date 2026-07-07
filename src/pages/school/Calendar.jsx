@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SchoolSidebar from "../../components/SchoolSidebar";
-import { FiPlus, FiEdit, FiTrash2, FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiPlus, FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import ActionMenu from "../../components/ActionMenu";
 import { useUI } from "../../components/UIContext";
 
 export default function Calendar() {
@@ -120,7 +121,7 @@ export default function Calendar() {
 
   // Render Calendar Grid Cells
   const calendarCells = [];
-  
+
   // Empty slots for previous month
   for (let i = 0; i < firstDayIndex; i++) {
     calendarCells.push(<div key={`empty-${i}`} className="calendar-cell empty" />);
@@ -216,8 +217,7 @@ export default function Calendar() {
                           </span>
                         </div>
                         <div className="event-item-actions">
-                          <button className="icon-mini-btn" onClick={() => handleOpenEditModal(event)}>✏️</button>
-                          <button className="icon-mini-btn delete" onClick={() => handleDelete(event.id)}>🗑️</button>
+                          <ActionMenu onEdit={() => handleOpenEditModal(event)} onDelete={() => handleDelete(event.id)} />
                         </div>
                       </div>
                       <h4 className="event-item-title">{event.title}</h4>

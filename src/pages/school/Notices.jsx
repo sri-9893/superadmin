@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SchoolSidebar from "../../components/SchoolSidebar";
-import { FiPlus, FiEdit, FiTrash2, FiX } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
+import ActionMenu from "../../components/ActionMenu";
 import { useUI } from "../../components/UIContext";
 
 export default function Notices() {
@@ -140,10 +141,9 @@ export default function Notices() {
                           <span className="badge badge-info">{notice.audience}</span>
                         </td>
                         <td data-label="Status">
-                          <span className={`badge ${
-                            notice.status === "Published" ? "badge-success" : 
-                            notice.status === "Scheduled" ? "badge-warning" : "badge-outline"
-                          }`}>
+                          <span className={`badge ${notice.status === "Published" ? "badge-success" :
+                              notice.status === "Scheduled" ? "badge-warning" : "badge-outline"
+                            }`}>
                             {notice.status}
                           </span>
                         </td>
@@ -152,12 +152,7 @@ export default function Notices() {
                         </td>
                         <td data-label="Actions">
                           <div className="table-action">
-                            <button className="btn btn-outline btn-sm" onClick={() => handleOpenEditModal(notice)}>
-                              <FiEdit /> Edit
-                            </button>
-                            <button className="btn btn-danger btn-sm" onClick={() => handleDelete(notice.id)}>
-                              <FiTrash2 /> Delete
-                            </button>
+                            <ActionMenu onEdit={() => handleOpenEditModal(notice)} onDelete={() => handleDelete(notice.id)} />
                           </div>
                         </td>
                       </tr>

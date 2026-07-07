@@ -40,12 +40,13 @@ export default function SchoolSidebar() {
     { label: "Dashboard", path: "/school/dashboard", icon: FiHome },
     { label: "Classes", path: "/school/classes", icon: FiGrid },
     { label: "Students", path: "/school/students", icon: FiUsers },
-    { label: "Teachers", path: "/school/teachers", icon: FiBookOpen },
+    { label: "Staff Management", path: "/school/staff", icon: FiBookOpen },
     { label: "Attendance", path: "/school/attendance", icon: FiUserCheck },
     { label: "Timetable", path: "/school/timetable", icon: FiClock },
     { label: "Calendar", path: "/school/calendar", icon: FiCalendar },
     { label: "Notices", path: "/school/notices", icon: FiBell },
     { label: "Fees", path: "/school/fees", icon: FiCreditCard },
+    { label: "Examinations", path: "/school/examinations/dashboard", icon: FiBookOpen },
     { label: "Parents", path: "/school/parents", icon: FiUsers },
     { label: "Reports", path: "/school/reports", icon: FiTrendingUp },
     { label: "Settings", path: "/school/settings", icon: FiSettings },
@@ -63,7 +64,7 @@ export default function SchoolSidebar() {
       />
 
       <div className={`sidebar ${isOpen ? "active" : ""}`}>
-        <div className="sidebar-header">🏫 School Admin</div>
+        <div className="sidebar-header">🏫 Administation</div>
         <div className="sidebar-subtitle">Portal Management</div>
         <ul className="sidebar-menu">
           {menuItems.map((item) => {

@@ -5,8 +5,10 @@ import VerifyOtp from "../pages/VerifyOtp";
 import Unauthorized from "../pages/Unauthorized";
 import Dashboard from "../pages/dashboard/Dashboard";
 import ProtectedRoute from "../components/ProtectedRoute";
-import OrganizationDetails from "../pages/superadmin//OrganizationDetails";
+import OrganizationDetails from "../pages/superadmin/OrganizationDetails";
 import OrganizationRegistration from "../pages/dashboard/OrganizationRegistration";
+import Subscription from "../pages/dashboard/Subscription";
+import Settings from "../pages/dashboard/Settings";
 
 // New School ERP imports
 import SchoolDashboard from "../pages/school/SchoolDashboard";
@@ -20,9 +22,20 @@ import Notices from "../pages/school/Notices";
 import Fees from "../pages/school/Fees";
 import Parents from "../pages/school/Parents";
 import ParentDashboard from "../pages/school/ParentDashboard";
+import StaffManagement from "../pages/school/StaffManagement";
 import TeacherDashboard from "../pages/school/TeacherDashboard";
 import CashierDashboard from "../pages/school/CashierDashboard";
 import InchargeDashboard from "../pages/school/InchargeDashboard";
+import ExamDashboard from "../pages/school/ExamDashboard";
+import CreateExam from "../pages/school/CreateExam";
+import ExamTimetable from "../pages/school/ExamTimetable";
+import MarksEntry from "../pages/school/MarksEntry";
+import Results from "../pages/school/Results";
+import ExamReportCards from "../pages/school/ExamReportCards";
+import ReportCard from "../pages/school/ReportCard";
+import SchoolReports from "../pages/school/SchoolReports";
+import SchoolSettings from "../pages/school/SchoolSettings";
+import RoleSelectionPage from "../pages/school/RoleSelectionPage";
 
 function DashboardRedirect() {
   const role = localStorage.getItem("userRole");
@@ -60,6 +73,16 @@ function AppRoutes() {
         <Route path="/school/notices" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><Notices /></ProtectedRoute>} />
         <Route path="/school/fees" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><Fees /></ProtectedRoute>} />
         <Route path="/school/parents" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><Parents /></ProtectedRoute>} />
+        <Route path="/school/staff" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><StaffManagement /></ProtectedRoute>} />
+        <Route path="/school/reports" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><SchoolReports /></ProtectedRoute>} />
+        <Route path="/school/settings" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><SchoolSettings /></ProtectedRoute>} />
+        <Route path="/school/examinations/dashboard" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><ExamDashboard /></ProtectedRoute>} />
+        <Route path="/school/examinations/create" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><CreateExam /></ProtectedRoute>} />
+        <Route path="/school/examinations/timetable" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><ExamTimetable /></ProtectedRoute>} />
+        <Route path="/school/examinations/marks" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><MarksEntry /></ProtectedRoute>} />
+        <Route path="/school/examinations/results" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><Results /></ProtectedRoute>} />
+        <Route path="/school/examinations/report-cards" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><ExamReportCards /></ProtectedRoute>} />
+        <Route path="/school/examinations/report-card" element={<ProtectedRoute allowedRoles={["SCHOOL_ADMIN"]}><ReportCard /></ProtectedRoute>} />
 
         {/* Teacher Dashboard routes */}
         <Route path="/school/teacher/dashboard" element={<ProtectedRoute allowedRoles={["SCHOOL_TEACHER"]}><TeacherDashboard /></ProtectedRoute>} />
@@ -73,12 +96,15 @@ function AppRoutes() {
         {/* Class Incharge Dashboard routes */}
         <Route path="/school/incharge/dashboard" element={<ProtectedRoute allowedRoles={["SCHOOL_CLASS_INCHARGE"]}><InchargeDashboard /></ProtectedRoute>} />
 
+        {/* Role Selection for Multi-role Users */}
+        <Route path="/school/role-selection" element={<ProtectedRoute><RoleSelectionPage /></ProtectedRoute>} />
+
         {/* Generic Dashboard Redirect */}
         <Route path="/dashboard" element={<DashboardRedirect />} />
-        <Route path="/organization-registration" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><DashboardRedirect /></ProtectedRoute>} />
-        <Route path="/organization-details" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><DashboardRedirect /></ProtectedRoute>} />
-        <Route path="/subscription" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><DashboardRedirect /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><DashboardRedirect /></ProtectedRoute>} />
+        <Route path="/organization-registration" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><OrganizationRegistration /></ProtectedRoute>} />
+        <Route path="/organization-details" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><OrganizationDetails /></ProtectedRoute>} />
+        <Route path="/subscription" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><Subscription /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]}><Settings /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
@@ -86,4 +112,4 @@ function AppRoutes() {
   );
 }
 
-export default AppRoutes;
+export default AppRoutes; 

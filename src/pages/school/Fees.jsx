@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SchoolSidebar from "../../components/SchoolSidebar";
-import { FiPlus, FiEdit, FiTrash2, FiX } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
+import ActionMenu from "../../components/ActionMenu";
 import { useUI } from "../../components/UIContext";
 
 export default function Fees() {
@@ -242,21 +243,15 @@ export default function Fees() {
                             <td data-label="Pending Dues" className="text-danger">₹{fee.pendingAmount.toLocaleString("en-IN")}</td>
                             <td data-label="Due Date">{fee.dueDate}</td>
                             <td data-label="Status">
-                              <span className={`badge ${
-                                fee.status === "Paid" ? "badge-success" : 
-                                fee.status === "Pending" ? "badge-warning" : "badge-danger"
-                              }`}>
+                              <span className={`badge ${fee.status === "Paid" ? "badge-success" :
+                                  fee.status === "Pending" ? "badge-warning" : "badge-danger"
+                                }`}>
                                 {fee.status}
                               </span>
                             </td>
                             <td data-label="Actions">
                               <div className="table-action">
-                                <button className="btn btn-outline btn-sm" onClick={() => handleOpenEditModal(fee)}>
-                                  <FiEdit /> Edit
-                                </button>
-                                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(fee.id)}>
-                                  <FiTrash2 /> Delete
-                                </button>
+                                <ActionMenu onEdit={() => handleOpenEditModal(fee)} onDelete={() => handleDelete(fee.id)} />
                               </div>
                             </td>
                           </tr>
