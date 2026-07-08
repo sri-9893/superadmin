@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FiHome,
@@ -21,6 +21,12 @@ export default function SchoolSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [schoolSettings, setSchoolSettings] = useState({});
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("school_settings") || "{}");
+    setSchoolSettings(stored);
+  }, []);
 
   const isActive = (path) => (location.pathname === path ? "active" : "");
 
@@ -64,8 +70,23 @@ export default function SchoolSidebar() {
       />
 
       <div className={`sidebar ${isOpen ? "active" : ""}`}>
-        <div className="sidebar-header">🏫 Administation</div>
-        <div className="sidebar-subtitle">Portal Management</div>
+        <div className="sidebar-brand">
+          {schoolSettings.logo ? (
+            <img
+              src={schoolSettings.logo}
+              alt="School Logo"
+              className="sidebar-school-logo"
+            />
+          ) : (
+            <div className="sidebar-logo-fallback">🏫</div>
+          )}
+
+          <div className="sidebar-header">
+            {schoolSettings.schoolName || "Administation"}
+          </div>
+
+          <div className="sidebar-subtitle">Portal Management</div>
+        </div>
         <ul className="sidebar-menu">
           {menuItems.map((item) => {
             const Icon = item.icon;
